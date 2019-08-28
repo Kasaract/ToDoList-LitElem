@@ -2,12 +2,6 @@ import { LitElement, html } from 'lit-element';
 
 import { styles } from './styles';
 
-const VisibilityFilters = {
-	SHOW_ALL: 'All',
-	SHOW_ACTIVE: 'Active',
-	SHOW_COMPLETED: 'Completed'
-};
-
 class TodoView extends LitElement {
 	static get styles() {
 		return styles;
@@ -16,7 +10,6 @@ class TodoView extends LitElement {
 	static get properties() {
 		return {
 			todos: { type: Array },
-			filter: { type: String },
 			task: { type: String }
 		};
 	}
@@ -24,7 +17,6 @@ class TodoView extends LitElement {
 	constructor() {
 		super();
 		this.todos = [];
-		this.filter = VisibilityFilters.SHOW_ALL;
 		this.task = '';
 	}
 
@@ -44,32 +36,22 @@ class TodoView extends LitElement {
 			</div>
 
 			<div class="todos-list">
-				${this.applyFilter(this.todos).map(
+				${this.todos.map(
 					todo => html`
 						<div class="todo-item">
-							<input
-								type="checkbox"
-								?checked="${todo.complete}"
-								@change="${e => this.updateTodoStatus(todo, e.target.checked)}"
-							/>
-							${todo.task}
+							<label>
+								<input
+									type="checkbox"
+									?checked="${todo.complete}"
+									@change="${e =>
+										this.updateTodoStatus(todo, e.target.checked)}"
+								/>${todo.task}
+							</label>
 						</div>
 					`
 				)}
 			</div>
 
-			<!-- Needs to be changed!!! -->
-			<fieldset
-				class="visibility-filters"
-				value="${this.filter}"
-				@value-changed="${this.filterChanged}"
-			>
-				${Object.values(VisibilityFilters).map(
-					filter => html`
-						<input type="radio" value="${filter}" />
-					`
-				)}
-			</fieldset>
 			<button @click="${this.clearCompleted}">
 				Clear Completed
 			</button>
@@ -105,28 +87,13 @@ class TodoView extends LitElement {
 		);
 	}
 
-	filterChanged(e) {
-		this.filter = e.target.value;
-	}
-
 	clearCompleted() {
 		this.todos = this.todos.filter(todo => !todo.complete);
 	}
 
-	applyFilter(todos) {
-		switch (this.filter) {
-			case VisibilityFilters.SHOW_ACTIVE:
-				return todos.filter(todo => !todo.complete);
-			case VisibilityFilters.SHOW_COMPLETED:
-				return todos.filter(todo => todo.complete);
-			default:
-				return todos;
-		}
-	}
-
-	createRenderRoot() {
-		return this;
-	}
+	// createRenderRoot() {
+	// 	return this;
+	// }
 }
 
 customElements.define('todo-view', TodoView);

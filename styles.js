@@ -12,16 +12,12 @@ export const styles = css`
 		display: flex;
 	}
 
-	todo-view .input-layout vaadin-text-field {
+	todo-view .input-layout input {
 		flex: 1;
 		margin-right: var(--spacing);
 	}
 
 	todo-view .todos-list {
 		margin-top: var(--spacing);
-	}
-
-	todo-view .visibility-filters {
-		margin-top: calc(4 * var(--spacing));
 	}
 `;
